@@ -31,6 +31,14 @@ public class AddTaskPresentation extends JSONPresentation {
         } catch (ParseException ex) {
             throw new IOException("Invalid date/time format");
         }
+
+
+        if (!newTask.isValid())
+            throw new IOException("start time after end time");
+
+        if (newTask.anyOverlaps())
+            throw new IOException("task overlaps with a previous task");
+
         newTask.save();
 
         Map<String, String> result = new HashMap<>();

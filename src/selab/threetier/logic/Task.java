@@ -2,9 +2,11 @@ package selab.threetier.logic;
 
 import selab.threetier.storage.Storage;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TreeMap;
 import java.util.logging.SimpleFormatter;
 
 public class Task extends Entity {
@@ -36,5 +38,31 @@ public class Task extends Entity {
 
     public static ArrayList<Task> getAll() {
         return Storage.getInstance().getTasks().getAll();
+    }
+
+    public boolean isValid() throws IOException {
+        try {
+            return this.start.before(this.end);
+        } catch (NullPointerException ex) {
+            throw new IOException("Start date or end date is not set");
+        }
+    }
+
+    public boolean anyOverlaps() throws IOException {
+        for (Task task: Storage.getInstance().getTasks().getAll()) {
+            try {
+                if (this.overlaps(task))
+                    return true;
+            } catch (NullPointerException ex) {
+                throw new IOException("Start date or end date is not set");
+            }
+
+        }
+        return false;
+    }
+
+    private boolean overlaps(Task task) {
+        return (start.after(task.start) && start.before(task.end)) ||
+                (end.after(task.start) && end.before(task.end));
     }
 }
