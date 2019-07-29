@@ -2,6 +2,7 @@ package selab.threetier.storage;
 import selab.threetier.logic.Entity;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class EntityStorage<T extends Entity> {
@@ -30,6 +31,12 @@ public class EntityStorage<T extends Entity> {
 
     public ArrayList<T> getAll() {
         return new ArrayList<T>(list.values());
+    }
+
+    public ArrayList<T> getlAllSorted(Comparator<T> criterion) {
+        ArrayList<T> allTasks = getAll();
+        allTasks.sort(criterion);
+        return allTasks;
     }
 
     public T get(int id) {

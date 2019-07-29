@@ -5,6 +5,7 @@ import selab.threetier.storage.Storage;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.TreeMap;
 import java.util.logging.SimpleFormatter;
@@ -37,8 +38,16 @@ public class Task extends Entity {
     public void delete() {Storage.getInstance().getTasks().delete(this);}
 
     public static ArrayList<Task> getAll() {
-        return Storage.getInstance().getTasks().getAll();
+        return Storage.getInstance().getTasks().getlAllSorted((o1, o2) -> {
+            if (o1.start.before(o2.start))
+                return -1;
+            else if (o1.start.equals(o2.start))
+                return 0;
+            else
+                return 1;
+        });
     }
+
 
     public boolean isValid() throws IOException {
         try {
